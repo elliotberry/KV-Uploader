@@ -1,6 +1,6 @@
 import { readdir, readFile, writeFile } from "fs/promises"
 import { join} from "path"
-
+import { parse, stringify } from 'yaml'
 import path from "path"
 import req from "./req.js"
 import { fdir } from "fdir"
