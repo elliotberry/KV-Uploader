@@ -1,5 +1,5 @@
 import { readdir, readFile, writeFile } from "fs/promises"
-import { join, basename } from "path"
+import { join} from "path"
 
 import path from "path"
 import req from "./req.js"
@@ -28,18 +28,6 @@ async function uploadFileToKV(namespace, filePath, key) {
   }
 }
 
-async function processFiles(folderPath, namespace) {
-  try {
-    const files = await readdir(path.resolve(folderPath))
-    for await (const file of files) {
-      const filePath = join(folderPath, file)
-
-      await uploadFileToKV(namespace, filePath)
-    }
-  } catch (error) {
-    console.error("Error processing files:", error)
-  }
-}
 
 async function getRelativePath(fromDir, fullPath) {
   return relative(fromDir, fullPath)
