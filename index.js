@@ -1,11 +1,12 @@
 import chalk from "chalk"
 import { fdir } from "fdir"
 import mime from "mime-types"
+import { minimatch } from "minimatch"
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { relative } from "node:path"
 
-import getID from "./getID.js"
+import getID from "./get-id.js"
 import request from "./req.js"
 
 function getMimeType(filePath) {
@@ -40,7 +41,24 @@ async function main() {
   //let namespace = "49f7b663e6244e179d626b5e9f24254a"
   let namespace = await getID()
   let files = await new fdir().withFullPaths().crawl(folderPath).withPromise()
+
+  //filter dumb shit
+  let finalFiles = []
+  let ignores = [".DS_Store"]
   for await (const file of files) {
+    var remove = false
+    for await (const ignore of ignores) {
+      remove = minimatch(file, ignore, { matchBase: true })
+      if (remove) {
+        break
+      }
+    }
+    if (remove === false) {
+      finalFiles.push(file)
+    }
+  }
+
+  for await (const file of finalFiles) {
     let key = await getRelativePath(folderPath, file)
     await uploadFileToKV(namespace, file, key)
   }

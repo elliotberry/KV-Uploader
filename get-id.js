@@ -3,7 +3,7 @@ import fs from "node:fs/promises"
 
 const parse = (data) => {
   let ret = null
-  data3.kv_namespaces.forEach((element) => {
+  data.kv_namespaces.forEach((element) => {
     if (element.binding.indexOf("static") > -1) {
       ret = element.id
     }
