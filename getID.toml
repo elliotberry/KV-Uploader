@@ -1,0 +1,14 @@
+name = "in-the-lair-of-the-hot-dog-man"
+main = "./index.js"
+compatibility_date = "2024-04-05"
+node_compat = true
+kv_namespaces = [
+    { binding = "secrets", id = "5da72c9223e2494ca80777ed3a53eba7" },
+    { binding = "logins", id = "624fc2d6616649c992ba44618049f8a2" },
+    { binding = "hotdogmanrequestcache", id = "70e96a81bdda4984814fce747ec7fe88" },
+    { binding = "hotdogmanimagecache", id = "4c56dcd776a54646ba7db7ea9d05dcb0" },
+    { binding = "static", id = "49f7b663e6244e179d626b5e9f24254a" },
+]
+workers_dev = true
+[ai]
+binding = "AI"
