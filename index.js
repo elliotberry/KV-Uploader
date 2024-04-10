@@ -8,7 +8,7 @@ import { relative } from "node:path"
 
 import { putInCache, shouldUpload } from "./cache.js"
 import getID from "./get-id.js"
-import request from "./req.js"
+import request from "./request.js"
 
 function getMimeType(filePath) {
   const extension = path.extname(filePath).slice(1)
@@ -40,11 +40,10 @@ async function getRelativePath(fromDirectory, fullPath) {
   return relative(fromDirectory, fullPath)
 }
 
-//49f7b663e6244e179d626b5e9f24254a
 async function main() {
   const arguments_ = process.argv.slice(2)
   const [folderPath] = arguments_
-  //let namespace = "49f7b663e6244e179d626b5e9f24254a"
+
   let namespace = await getID()
   let files = await new fdir().withFullPaths().crawl(folderPath).withPromise()
 

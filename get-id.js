@@ -1,6 +1,11 @@
 import fs from "node:fs/promises"
 import toml from "toml"
 
+//
+// gets name of namespace from local wrangler.toml file
+//
+
+
 const getStatic = (array) => {
   let returnValue = null
 
@@ -13,7 +18,6 @@ const getStatic = (array) => {
 }
 
 const parse = (data) => {
- 
   let returnValue = null
 
   if (data.kv_namespaces) {
@@ -21,7 +25,6 @@ const parse = (data) => {
   }
   if (data.env) {
     for (const environ in data.env) {
-     
       let returnValue_ = getStatic(data.env[environ].kv_namespaces)
       if (returnValue_ !== null) {
         returnValue = returnValue_
@@ -31,6 +34,7 @@ const parse = (data) => {
   }
   return returnValue
 }
+
 const getWranglerStaticKVID = async () => {
   let data = await fs.readFile(`${process.cwd()}/wrangler.toml`, "utf8")
   var data3 = toml.parse(data)

@@ -1,19 +1,18 @@
 import { open } from "node:fs/promises"
-import pkg from "xxhash-addon"
-const { XXHash3 } = pkg
+import { createHash } from "node:crypto"
 
 const promiseToHash = (rs) => {
-  return new Promise(function (resolve, rej) {
-    const xxh3 = new XXHash3(Buffer.from([0, 0, 0, 0]))
-    rs.on("data", (data) => xxh3.update(data))
-      .on("end", () => resolve(xxh3.digest().toString("hex")))
+  return new Promise(function (resolve, reject) {
+    const hash = createHash("sha256")
+    rs.on("data", (data) => hash.update(data))
+      .on("end", () => resolve(hash.digest("hex")))
       .on("error", (error) => {
-        rej(error)
+        reject(error)
       })
   })
 }
 
-// Hashes a file using XXHash3
+// Hashes a file using SHA256
 const hashIt = async (filePath) => {
   let filehandle = await open(filePath)
   let rs = filehandle.createReadStream()
@@ -21,4 +20,5 @@ const hashIt = async (filePath) => {
   await filehandle.close()
   return hash
 }
+
 export default hashIt

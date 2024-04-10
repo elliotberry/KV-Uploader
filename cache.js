@@ -9,7 +9,7 @@ const open = async (path) => {
   try {
     let theData = await fs.readFile(localCachePath(), "utf8")
     data = JSON.parse(theData)
-  } catch(e) {
+  } catch {
     console.log("No cache file found, creating one")
     await fs.writeFile(localCachePath(), JSON.stringify(data, null, 2))
   }
@@ -30,7 +30,7 @@ const putInCache = async (namespace, key, file) => {
     namespace,
     hash
   })
-let newData = { files: filteredArray }
+  let newData = { files: filteredArray }
   await write(newData)
 }
 const shouldUpload = async (namespace, key, file) => {
