@@ -6,6 +6,7 @@ import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { relative } from "node:path"
 
+import { putInCache, shouldUpload } from "./cache.js"
 import getID from "./get-id.js"
 import request from "./req.js"
 
@@ -16,9 +17,14 @@ function getMimeType(filePath) {
 }
 
 async function uploadFileToKV(namespace, filePath, key) {
-  const fileContent = await readFile(filePath, { encoding: "base64" })
-  const mime = getMimeType(filePath)
   try {
+    const fileContent = await readFile(filePath, { encoding: "base64" })
+    const mime = getMimeType(filePath)
+
+    if (!mime) {
+      throw new Error(`Failed to get mime type for ${filePath}`)
+    }
+
     await request(namespace, key, mime, fileContent)
     console.log(
       chalk.green(
@@ -60,7 +66,12 @@ async function main() {
 
   for await (const file of finalFiles) {
     let key = await getRelativePath(folderPath, file)
-    await uploadFileToKV(namespace, file, key)
+    let needToUpload = await shouldUpload(namespace, key, file)
+
+    if (needToUpload) {
+      await uploadFileToKV(namespace, file, key)
+      await putInCache(namespace, key, file)
+    }
   }
 }
 

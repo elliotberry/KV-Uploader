@@ -1,15 +1,19 @@
-
-const req = async (namespace, key, mime, value) => {
-
+const request = async (namespace, key, mime, value) => {
+  if (!mime || mime === "" || mime === null) {
+    throw new Error("no mime")
+  }
+  if (!namespace || !key || !value) {
+    throw new Error("need args")
+  }
   let url = `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${namespace}/bulk`
 
   let options = {
-    method: "PUT",
     headers: {
-      "content-type": "application/json",
       "X-Auth-Email": process.env.CLOUDFLARE_API_EMAIL,
-      "X-Auth-Key": process.env.CLOUDFLARE_API_KEY
-    }
+      "X-Auth-Key": process.env.CLOUDFLARE_API_KEY,
+      "content-type": "application/json"
+    },
+    method: "PUT"
   }
   let bod = [
     {
@@ -24,8 +28,8 @@ const req = async (namespace, key, mime, value) => {
   let resp = await fetch(url, options).then((res) => res.json())
 
   if (resp.success === false) {
-   throw new Error(`Failed to upload file: ${resp.errors[0].message}`)
+    throw new Error(`Failed to upload file: ${resp.errors[0].message}`)
   }
 }
 
-export default req
+export default request
