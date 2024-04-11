@@ -6,9 +6,9 @@ import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { relative } from "node:path"
 
-import { putInCache, shouldUpload } from "./cache.js"
-import getID from "./get-id.js"
-import request from "./request.js"
+import { putInCache, shouldUpload } from "./lib/cache.js"
+import getID from "./lib/get-id.js"
+import request from "./lib/request.js"
 
 function getMimeType(filePath) {
   const extension = path.extname(filePath).slice(1)
