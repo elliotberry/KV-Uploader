@@ -1,40 +1,14 @@
-import chalk from "chalk"
 import { fdir } from "fdir"
-import mime from "mime-types"
+
 import { minimatch } from "minimatch"
-import { readFile } from "node:fs/promises"
-import path from "node:path"
+
 import { relative } from "node:path"
 
 import { putInCache, shouldUpload } from "./lib/cache.js"
 import getID from "./lib/get-id.js"
-import request from "./lib/request.js"
+import { uploadFileToKV } from "./uploadFileToKV.js"
 
-function getMimeType(filePath) {
-  const extension = path.extname(filePath).slice(1)
-  let mimetype = mime.lookup(extension)
-  return mimetype
-}
 
-async function uploadFileToKV(namespace, filePath, key) {
-  try {
-    const fileContent = await readFile(filePath, { encoding: "base64" })
-    const mime = getMimeType(filePath)
-
-    if (!mime) {
-      throw new Error(`Failed to get mime type for ${filePath}`)
-    }
-
-    await request(namespace, key, mime, fileContent)
-    console.log(
-      chalk.green(
-        `Uploaded ${path.basename(filePath)} to ${namespace} with key ${key}`
-      )
-    )
-  } catch (error) {
-    console.error(chalk.red(`Failed to upload file: ${error.message}`))
-  }
-}
 
 async function getRelativePath(fromDirectory, fullPath) {
   return relative(fromDirectory, fullPath)
