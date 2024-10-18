@@ -30,5 +30,3 @@ export async function uploadFileToKV(namespace, filePath, key) {
     console.error(chalk.red(`Failed to upload file: ${error.message}`));
   }
 }
-
-uploadFileToKV("0bb756d67c804857b8195c5bf7653872", "main.ttf", "main.ttf");
