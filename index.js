@@ -1,14 +1,11 @@
-import { fdir } from "fdir"
-
-import { minimatch } from "minimatch"
-
 import { relative } from "node:path"
+
+import { fdir } from "fdir"
+import { minimatch } from "minimatch"
 
 import { putInCache, shouldUpload } from "./lib/cache.js"
 import getID from "./lib/get-id.js"
-import { uploadFileToKV } from "./uploadFileToKV.js"
-
-
+import { uploadFileToKV } from "./upload-file-to-kv.js"
 
 async function getRelativePath(fromDirectory, fullPath) {
   return relative(fromDirectory, fullPath)
@@ -25,7 +22,7 @@ async function main() {
   let finalFiles = []
   let ignores = [".DS_Store"]
   for await (const file of files) {
-    var remove = false
+    let remove = false
     for await (const ignore of ignores) {
       remove = minimatch(file, ignore, { matchBase: true })
       if (remove) {

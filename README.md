@@ -1,5 +1,4 @@
 # kv-uploader
-![](./icon.jpeg)
 
 > upload binary file blobs to cloudflare workers kv, and then use as a static server for your cloudflare workers project
 
